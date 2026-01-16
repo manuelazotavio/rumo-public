@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "event" ADD COLUMN     "mediaNota" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "totalAvaliacoes" INTEGER NOT NULL DEFAULT 0;

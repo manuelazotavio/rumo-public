@@ -1,0 +1,59 @@
+{
+  "name": "backcooking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config/server.js",
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+  "scripts": {
+    "start": "node src/config/server.js",
+    "dev": "nodemon src/config/server.js",
+    "scrape:estabelecimentos": "node scripts/scrapeEstabelecimentos.js",
+    "generate": "npx prisma generate",
+    "pull": "npx prisma db pull",
+    "push": "npx prisma db push --accept-data-loss"
+  },
+  "keywords": [
+    "js",
+    "node",
+    "express",
+    "zod",
+    "api",
+    "jwt",
+    "mvc"
+  ],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "@fortawesome/free-regular-svg-icons": "^7.1.0",
+    "@prisma/client": "^5.22.0",
+    "@sendgrid/mail": "^8.1.5",
+    "@supabase/supabase-js": "^2.81.0",
+    "axios": "^1.10.0",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.2",
+    "file-system": "^2.2.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.14.1",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.5",
+    "nodemon": "^3.1.10",
+    "resend": "^6.5.2",
+    "sendgrid": "^5.2.3",
+    "uuid": "^10.0.0",
+    "zod": "^3.22.5"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "prisma": "^5.22.0"
+  }
+}

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "guia" ADD COLUMN     "validadeCadastur" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

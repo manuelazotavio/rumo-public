@@ -1,0 +1,570 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model user {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(250)
+  email       String?     @unique(map: "unique-email") @db.VarChar(250)
+  phone       String?     @unique(map: "unique-phone") @db.VarChar(20)
+  pass        String
+  status      UserStatus  @default(ATIVO)
+  admin       Int         @default(0)
+  certificate String?     @unique @db.VarChar(100)
+  guia        Int         @default(0)
+  guiaId      Int?        @default(0)
+  transacoes  transacao[]
+
+  resetPasswordToken   String?
+  resetPasswordExpires DateTime?
+  avaliacoes           avaliacao[]
+  logs                 logs[]
+  sessions             sessionUser[]
+  visualizacaoPagina   visualizacaoPagina[]
+  roteiros             roteiro[]            @relation("roteiroTouser")
+  event                event[]
+}
+
+model logs {
+  id        Int      @id @default(autoincrement())
+  level     String   @default("INFO") @db.VarChar(20)
+  action    String   @db.VarChar(100)
+  message   String   @db.VarChar(500)
+  metadata  Json?
+  ipAddress String?  @db.VarChar(45)
+  userAgent String?
+  userId    Int?
+  atracaoId Int?
+  guiaId    Int?
+  createdAt DateTime @default(now())
+  atracao   atracao? @relation(fields: [atracaoId], references: [id])
+  guia      guia?    @relation(fields: [guiaId], references: [id])
+  user      user?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model newsletter {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(250)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model visualizacaoPagina {
+  id         Int      @id @default(autoincrement())
+  ipAddress  String?  @db.VarChar(45)
+  userAgent  String?  @db.VarChar(500)
+  tempoGasto Int      @default(0)
+  clicks     Int      @default(0)
+  viewerId   Int?
+  atracaoId  Int?
+  guiaId     Int?
+  createdAt  DateTime @default(now())
+  atracao    atracao? @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+  guia       guia?    @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+  viewer     user?    @relation(fields: [viewerId], references: [id], onDelete: Cascade)
+
+  @@index([atracaoId])
+  @@index([guiaId])
+  @@index([createdAt])
+}
+
+model guia {
+  id                Int        @id @default(autoincrement())
+  name              String     @unique @db.VarChar(250)
+  number            String     @default("S/N") @db.VarChar(30)
+  category          String     @db.VarChar(100)
+  segment           String     @db.VarChar(100)
+  email             String     @unique @db.VarChar(100)
+  website           String     @db.VarChar(100)
+  certificate       String?    @unique @db.VarChar(100)
+  languages         String     @db.VarChar(100)
+  city              String     @db.VarChar(100)
+  passHash          String?
+  confirmationToken String?    @unique
+  status            GuiaStatus @default(PENDENTE)
+  description       String?    @db.VarChar(400)
+  plan              GuiaPlan   @default(FREE)
+  pricePerHour      Int?
+  approvedAt        DateTime?
+  approvedBy        Int?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  mediaNota         Float      @default(0)
+  totalAvaliacoes   Int        @default(0)
+  validadeCadastur  DateTime   @default(now())
+  image             String?    @db.VarChar(500)
+
+  saldoDisponivel Float   @default(0)
+  saldoPendente   Float   @default(0)
+  chavePix        String? @db.VarChar(100)
+
+  transacoes         transacao[]
+  saques             saque[]
+  atracoes           atracao[]
+  avaliacoes         avaliacao[]
+  categorias         guiaCategoria[]
+  imagens            guiaImagem[]
+  segmentos          guiaSegmento[]
+  logs               logs[]
+  vinculaGuiaPasseio vinculaGuiaPasseio[]
+  roteiros           vinculaGuiaRoteiro[]
+  visualizacaoPagina visualizacaoPagina[]
+}
+
+model atracao {
+  id                     Int           @id @default(autoincrement())
+  name                   String        @db.VarChar(250)
+  slug                   String?       @unique
+  cpfcnpj                String?       @db.VarChar(20)
+  tipoatuacao            String        @db.VarChar(20)
+  phone                  String        @default("S/N") @db.VarChar(20)
+  description            String?       @db.VarChar(1500)
+  email                  String?       @unique(map: "unique-email-atracao") @db.VarChar(100)
+  multiLocation          Boolean?      @default(false)
+  website                String?       @db.VarChar(100)
+  address                String?       @db.VarChar(100)
+  number                 String?       @db.VarChar(100)
+  cep                    String?       @db.VarChar(20)
+  bairro                 String?       @db.VarChar(100)
+  referencia             String?       @db.VarChar(300)
+  cadastur               String?       @db.VarChar(50)
+  preco                  String?       @db.VarChar(10)
+  instagram              String?       @db.VarChar(100)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  approvedAt             DateTime?
+  approvedBy             Int?
+  rejectionReason        String?
+  status                 AtracaoStatus @default(PENDENTE)
+  passHash               String
+  confirmationToken      String?       @unique
+  mediaNota              Float         @default(0)
+  totalAvaliacoes        Int           @default(0)
+  googlePlaceId          String?       @db.VarChar(100)
+  googleRating           Float?
+  googleUserRatingsTotal Int?
+  lastGoogleUpdate       DateTime?
+
+  guiaId             Int?
+  guia               guia?                   @relation(fields: [guiaId], references: [id])
+  subCategorias      atracaoSubCategoria[]
+  avaliacoes         avaliacao[]
+  imagens            imagens[]
+  logs               logs[]
+  sessions           sessionEmpresa[]
+  passeios           vinculaAtracaoPasseio[]
+  vinculaDia         vinculaDia[]
+  vinculaRoteiro     vinculaRoteiro[]
+  visualizacaoPagina visualizacaoPagina[]
+  event              event[]
+}
+
+model roteiro {
+  id             Int                     @id @default(autoincrement())
+  name           String?                 @default("Roteiro") @db.VarChar(100)
+  createdAt      DateTime                @default(now())
+  secret         Int                     @default(0)
+  updatedAt      DateTime                @default(now()) @updatedAt
+  guias          vinculaGuiaRoteiro[]
+  vinculaRoteiro vinculaRoteiro[]
+  passeios       vinculaRoteiroPasseio[]
+  eventos        vinculaRoteiroEvento[]
+  dias           dia[]                   @relation("roteiroToDia")
+  users          user[]                  @relation("roteiroTouser")
+}
+
+model dia {
+  id         Int          @id @default(autoincrement())
+  name       String?      @default("Roteiro") @db.VarChar(100)
+  createdAt  DateTime     @default(now())
+  position   Int          @default(0)
+  vinculaDia vinculaDia[]
+  roteiros   roteiro[]    @relation("roteiroToDia")
+}
+
+model vinculaDia {
+  id        Int     @id @default(autoincrement())
+  diaId     Int
+  atracaoId Int
+  atracao   atracao @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+  dia       dia     @relation(fields: [diaId], references: [id], onDelete: Cascade)
+
+  @@index([diaId], map: "diaId")
+  @@index([atracaoId], map: "atracaoId")
+}
+
+model vinculaRoteiro {
+  id        Int     @id @default(autoincrement())
+  atracaoId Int
+  roteiroId Int
+  atracao   atracao @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+  roteiro   roteiro @relation(fields: [roteiroId], references: [id], onDelete: Cascade)
+
+  @@unique([atracaoId, roteiroId], name: "unique_atracao_roteiro")
+  @@index([roteiroId], map: "idx_atracaoRoteiro_roteiroId")
+}
+
+model vinculaGuiaRoteiro {
+  id        Int     @id @default(autoincrement())
+  guiaId    Int
+  roteiroId Int
+  guia      guia    @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+  roteiro   roteiro @relation(fields: [roteiroId], references: [id], onDelete: Cascade)
+
+  @@unique([guiaId, roteiroId])
+  @@index([roteiroId])
+}
+
+model vinculaAtracaoPasseio {
+  id        Int     @id @default(autoincrement())
+  atracaoId Int
+  passeioId Int
+  atracao   atracao @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+  passeio   passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@unique([atracaoId, passeioId])
+  @@index([passeioId])
+}
+
+model vinculaRoteiroPasseio {
+  id        Int     @id @default(autoincrement())
+  roteiroId Int
+  passeioId Int
+  passeio   passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+  roteiro   roteiro @relation(fields: [roteiroId], references: [id], onDelete: Cascade)
+
+  @@unique([roteiroId, passeioId])
+  @@index([passeioId])
+}
+
+model passeio {
+  id          Int                     @id @default(autoincrement())
+  name        String                  @db.VarChar(100)
+  description String?                 @db.VarChar(1900)
+  price       String?                 @db.VarChar(400)
+  duration    Int
+  startDate   DateTime?
+  endDate     DateTime?
+  startTime   DateTime?
+  endTime     DateTime?
+  active      Boolean                 @default(true)
+  capacity    Int?
+  createdAt   DateTime                @default(now())
+  imagens     passeioImagem[]
+  atracoes    vinculaAtracaoPasseio[]
+  guias       vinculaGuiaPasseio[]
+  roteiros    vinculaRoteiroPasseio[]
+  transacao   transacao[]
+  avaliacoes  avaliacao[]
+}
+
+model avaliacao {
+  id         Int      @id @default(autoincrement())
+  nota       Int
+  comentario String?  @db.VarChar(500)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  userId     Int
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  atracaoId  Int?
+  atracao    atracao? @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+
+  guiaId     Int?
+  guia       guia?    @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+
+  passeioId  Int?
+  passeio    passeio? @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  eventId    Int?
+  event      event?   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, atracaoId])
+  @@unique([userId, guiaId])
+  @@unique([userId, passeioId])
+  @@unique([userId, eventId])
+  @@index([atracaoId])
+  @@index([guiaId])
+  @@index([passeioId])
+  @@index([eventId])
+}
+
+model imagens {
+  id        Int     @id @default(autoincrement())
+  atracaoId Int
+  type      String  @db.VarChar(500)
+  url       String  @db.VarChar(500)
+  ativo     String? @default("A")
+  atracao   atracao @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+
+  @@index([atracaoId], map: "atracaoUserId")
+}
+
+model guiaImagem {
+  id     Int    @id @default(autoincrement())
+  guiaId Int
+  url    String @db.VarChar(500)
+  type   String @db.VarChar(500)
+  guia   guia   @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+
+  @@index([guiaId])
+}
+
+model passeioImagem {
+  id        Int     @id @default(autoincrement())
+  passeioId Int
+  url       String  @db.VarChar(500)
+  type   String @db.VarChar(500)
+  passeio   passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@index([passeioId])
+}
+
+model vinculaGuiaPasseio {
+  id        Int     @id @default(autoincrement())
+  guiaId    Int
+  passeioId Int
+  guia      guia    @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+  passeio   passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@unique([guiaId, passeioId])
+  @@index([passeioId])
+}
+
+model categoria {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique @db.VarChar(100)
+  subCategorias subCategoria[]
+}
+
+model subCategoria {
+  id          Int                   @id @default(autoincrement())
+  name        String                @db.VarChar(100)
+  categoriaId Int
+  atracoes    atracaoSubCategoria[]
+  categoria   categoria             @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+
+  @@index([categoriaId])
+}
+
+model categoriaGuia {
+  id    Int             @id @default(autoincrement())
+  name  String          @unique @db.VarChar(100)
+  slug  String?         @unique
+  guias guiaCategoria[]
+}
+
+model segmentoGuia {
+  id    Int            @id @default(autoincrement())
+  name  String         @unique @db.VarChar(100)
+  slug  String?        @unique
+  guias guiaSegmento[]
+}
+
+model atracaoSubCategoria {
+  id             Int          @id @default(autoincrement())
+  atracaoId      Int
+  subCategoriaId Int
+  atracao        atracao      @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+  subCategoria   subCategoria @relation(fields: [subCategoriaId], references: [id], onDelete: Cascade)
+
+  @@unique([atracaoId, subCategoriaId])
+  @@index([subCategoriaId])
+  @@index([atracaoId])
+}
+
+model guiaCategoria {
+  id          Int           @id @default(autoincrement())
+  guiaId      Int
+  categoriaId Int
+  categoria   categoriaGuia @relation(fields: [categoriaId], references: [id], onDelete: Cascade)
+  guia        guia          @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+
+  @@unique([guiaId, categoriaId])
+  @@index([categoriaId])
+}
+
+model guiaSegmento {
+  id         Int          @id @default(autoincrement())
+  guiaId     Int
+  segmentoId Int
+  guia       guia         @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+  segmento   segmentoGuia @relation(fields: [segmentoId], references: [id], onDelete: Cascade)
+
+  @@unique([guiaId, segmentoId])
+  @@index([segmentoId])
+}
+
+model sessionUser {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "sessionUserId")
+}
+
+model sessionEmpresa {
+  id        Int      @id @default(autoincrement())
+  atracaoId Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  atracao   atracao  @relation(fields: [atracaoId], references: [id], onDelete: Cascade)
+
+  @@index([atracaoId], map: "sessionAtracaoId")
+}
+
+model transacao {
+  id         Int               @id @default(autoincrement())
+  guiaId     Int
+  valor      Float
+  descricao  String            @db.VarChar(250)
+  tipo       TransactionType
+  status     TransactionStatus @default(PENDENTE)
+  clienteId  Int?
+  passeioId  Int?
+  abacateId  String?           @unique @db.VarChar(100)
+  liberadoEm DateTime?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  guia    guia     @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+  cliente user?    @relation(fields: [clienteId], references: [id])
+  passeio passeio? @relation(fields: [passeioId], references: [id])
+
+  @@index([guiaId])
+  @@index([status])
+}
+
+model saque {
+  id          Int         @id @default(autoincrement())
+  guiaId      Int
+  valor       Float
+  status      SaqueStatus @default(SOLICITADO)
+  chavePix    String      @db.VarChar(100)
+  comprovante String?     @db.VarChar(500)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  guia guia @relation(fields: [guiaId], references: [id], onDelete: Cascade)
+
+  @@index([guiaId])
+}
+
+model event {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(250)
+  description String      @db.VarChar(2000)
+  startDate   DateTime
+  endDate     DateTime?
+  location    String?     @db.VarChar(250)
+  links       Json?
+  status      EventStatus @default(PENDENTE)
+  mediaNota         Float      @default(0)
+  totalAvaliacoes   Int        @default(0)
+
+  categoryId Int
+  category   eventCategory @relation(fields: [categoryId], references: [id])
+
+  userId Int
+  user   user @relation(fields: [userId], references: [id])
+
+  atracaoId Int?
+  atracao   atracao? @relation(fields: [atracaoId], references: [id])
+  roteiros    vinculaRoteiroEvento[]
+  images eventImage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  avaliacoes  avaliacao[]
+  @@index([status])
+  @@index([startDate])
+}
+
+model eventImage {
+  id      Int    @id @default(autoincrement())
+  eventId Int
+  url     String @db.VarChar(500)
+  type   String @db.VarChar(500)
+  event   event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model eventCategory {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(100)
+  events event[]
+}
+
+model vinculaRoteiroEvento {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  roteiroId Int
+  event     event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  roteiro   roteiro  @relation(fields: [roteiroId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, roteiroId])
+  @@index([roteiroId])
+}
+
+enum EventStatus {
+  PENDENTE
+  ATIVO
+  REJEITADO
+  CONCLUIDO
+}
+
+enum AtracaoStatus {
+  PENDENTE
+  ATIVO
+  REJEITADO
+}
+
+enum GuiaStatus {
+  PENDENTE
+  ATIVO
+  REJEITADO
+}
+
+enum UserStatus {
+  ATIVO
+  EXCLUIDO
+  PENDENTE
+}
+
+enum GuiaPlan {
+  FREE
+  PREMIUM
+}
+
+enum TransactionType {
+  CREDITO
+  DEBITO
+  ESTORNO
+}
+
+enum TransactionStatus {
+  PENDENTE
+  CONCLUIDO
+  CANCELADO
+}
+
+enum SaqueStatus {
+  SOLICITADO
+  PROCESSANDO
+  PAGO
+  REJEITADO
+}
