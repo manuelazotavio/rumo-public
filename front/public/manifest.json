@@ -1,0 +1,8 @@
+{
+  "short_name": "ECOTUR",
+  "name": "ECOTUR",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "var(--text-dark)",
+  "background_color": "#ffffff"
+}

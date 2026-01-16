@@ -1,0 +1,115 @@
+{
+  "header": {
+    "home": "Página Inicial",
+    "guides": "Guias turísticos",
+    "events": "Eventos",
+    "changeLanguage": "Mudar idioma",
+    "login": "Fazer login",
+    "logout": "Sair",
+    "myProfile": "Meu Perfil",
+    "myItineraries": "Meus Roteiros",
+    "tours": "Passeios",
+    "views": "Visualizações",
+    "agenda": "Minha Agenda",
+    "payments": "Pagamentos",
+    "settings": "Configurações",
+    "admin": {
+      "attractions": "Atrações",
+      "itineraries": "Roteiros",
+      "users": "Usuários",
+      "categories": "Categorias",
+      "reports": "Relatórios"
+    }
+  },
+  "landing": {
+    "aboutTitle": "Sobre a cidade",
+    "aboutText": "Caraguatatuba é o destino perfeito para quem busca natureza, cultura e alegria em um só lugar! Entre o mar e a serra, a cidade encanta com suas praias paradisíacas, cachoeiras revigorantes e trilhas que levam ao paraíso. É o equilíbrio ideal entre descanso e diversão. Viva a energia caiçara, sinta o encanto e venha ser feliz em Caraguá!"
+  },
+  "faq": {
+    "title": "Dúvidas sobre o Rumo",
+    "subtitle": "Entenda como podemos transformar sua experiência em Caraguatatuba.",
+    "items": {
+      "q1": "O que é a plataforma Rumo?",
+      "a1": "O Rumo é o seu guia digital completo para explorar Caraguatatuba. Conectamos turistas às melhores atrações, guias credenciados, eventos e gastronomia local, tudo em um só lugar para facilitar sua viagem.",
+      "q2": "Como funcionam os roteiros automáticos?",
+      "a2": "Nossa inteligência cria itinerários personalizados baseados nos seus interesses (como praias, aventura, cultura ou gastronomia). Basta selecionar o que você gosta e geramos um plano de viagem ideal para você em segundos.",
+      "q3": "Preciso pagar para usar o Rumo?",
+      "a3": "Não! O uso da plataforma para buscar atrações, criar roteiros e encontrar guias é totalmente gratuito para turistas e visitantes.",
+      "q4": "Os guias turísticos são verificados?",
+      "a4": "Sim. Prezamos pela segurança e qualidade. Todos os guias cadastrados na plataforma passam por uma verificação de Cadastur e antecedentes para garantir uma experiência segura e profissional.",
+      "q5": "Tenho um negócio ou sou guia, como posso me cadastrar?",
+      "a5": "É simples! Clique em 'Fazer Login' no topo da página, selecione a opção de cadastro e escolha entre 'Prestador de Serviço' ou 'Empresa'. Após o envio dos documentos, nossa equipe fará a validação do seu perfil."
+    }
+  },
+  "auth": {
+    "tabs": {
+      "user": "Para Você",
+      "company": "Para Empresas"
+    },
+    "user": {
+      "nameLabel": "Nome",
+      "namePlaceholder": "Nome",
+      "contactLabel": "E-mail ou celular",
+      "contactPlaceholder": "Email...",
+      "passwordLabel": "Senha",
+      "passwordConfirmLabel": "Confirme sua senha",
+      "isGuideLabel": "Você atua como guia turístico?",
+      "cadasturLabel": "Cadastur",
+      "cadasturPlaceholder": "Informe o número do Cadastur",
+      "btnRegister": "Cadastrar"
+    },
+    "company": {
+      "stepIndicator": {
+        "general": "Geral",
+        "contact": "Contato",
+        "location": "Localização",
+        "cadastur": "Cadastur",
+        "images": "Imagens",
+        "security": "Senha"
+      },
+      "actTypeTitle": "Informe o seu tipo de atuação:",
+      "actTypeSubtitle": "Selecione como você opera para personalizarmos seu cadastro.",
+      "autonomous": "Autônomo",
+      "autonomousDesc": "Para guias e prestadores de serviço individuais.",
+      "legalEntity": "Pessoa Jurídica (CNPJ)",
+      "legalEntityDesc": "Para empresas, agências e estabelecimentos.",
+      "docValidationTitle": "Validação de Identidade",
+      "docValidationDesc": "Precisamos do seu RG para garantir a segurança da plataforma.",
+      "frontRg": "Frente do RG",
+      "backRg": "Verso do RG",
+      "btnContinue": "Continuar",
+      "btnBack": "Voltar",
+      "btnNext": "Próximo",
+      "btnFinish": "Concluir Cadastro"
+    }
+  },
+  "roteiros": {
+    "createModal": {
+      "title": "Criar roteiro",
+      "nameLabel": "Nome do Roteiro",
+      "namePlaceholder": "Ex: Viagem com a galera",
+      "privacyLabel": "Privacidade",
+      "secret": "Secreto (Só vocês veem)",
+      "public": "Público (Todos podem ver)",
+      "addFriendsLabel": "Adicionar viajantes",
+      "searchPlaceholder": "Digite o e-mail ou celular do amigo",
+      "btnAdd": "Adicionar",
+      "btnCancel": "Cancelar",
+      "btnConfirm": "Confirmar Criação",
+      "addedList": "Pessoas adicionadas:"
+    },
+    "suggestionModal": {
+      "title": "Itens do roteiro",
+      "btnSave": "Salvar este roteiro"
+    },
+    "carouselTitle": "Roteiros sugeridos",
+    "cardBtnOpen": "Abrir"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "requiredField": "Campos obrigatórios",
+    "seeAll": "Ver todos"
+  }
+}

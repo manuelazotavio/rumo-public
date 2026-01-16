@@ -1,0 +1,40 @@
+.button-original {
+  background-color: var(--background-light);
+  color: var(--brand-primary);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;        
+  align-items: center;        
+  justify-content: center;
+  white-space: nowrap;        
+  max-height: 90px;           
+  padding: 20px; 
+  justify-self: center;
+  font-size: 22px; 
+}
+
+.button-sm {
+  padding: var(--spacing-sm) calc(var(--spacing-sm) * 2);
+  font-size: var(--font-size-sm);
+}
+
+.button-md {
+  padding: var(--spacing-md) calc(var(--spacing-md) * 2);
+  font-size: var(--font-size-md);
+}
+
+.button-lg {
+  padding: var(--spacing-lg) calc(var(--spacing-lg) * 6);
+  font-size: var(--font-size-lg);
+}
+
+@media (max-width: var(--bp-md)) {
+  .button-lg {
+    padding: var(--spacing-md) calc(var(--spacing-lg) * 3);
+    font-size: var(--font-size-md);
+  }
+}

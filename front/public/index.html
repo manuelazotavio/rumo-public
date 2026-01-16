@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Rumo Viagens | Explore Caraguatatuba</title>
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="../src/img/icon.png"
+      sizes="512x512"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Rumo Viagens",
+        "alternateName": ["Rumo", "RumoViagens"],
+        "url": "https://rumoviagens.com.br/"
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+default-src 'self';
+script-src 'self' 'unsafe-inline';
+style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+font-src 'self' https://fonts.gstatic.com;
+img-src 'self' blob: data: https://rumo.com.pl https://fxbwwpfwmawhgboqnnrq.supabase.co;
+connect-src 'self' https://rumo.com.pl https://viacep.com.br http://localhost:3001 wss://rumo.com.pl https://fxbwwpfwmawhgboqnnrq.supabase.co https://maps.googleapis.com; /* ADICIONADO AQUI */
+blob-src 'self' https://rumo.com.pl http://localhost:3001 https://fxbwwpfwmawhgboqnnrq.supabase.co;
+"
+    />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
